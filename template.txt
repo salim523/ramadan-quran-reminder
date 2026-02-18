@@ -1,0 +1,28 @@
+Day [N]
+
+Ramadan Mubarak! 🌙
+
+Today is Day [N] of your Ramadan journey. [MOTIVATION]
+
+This Ramadan, dedicate just 30 minutes to connect with the Quran. Listen, reflect, and let the words of Allah touch your heart. Every verse you hear brings you closer to understanding His message and enriching your spiritual journey.
+
+By completing today's listening, you will have covered [PERCENTAGE]% of the entire Quran! 
+That's remarkable progress! 📊
+
+Choose your preferred version and start listening now:
+
+🕌 Urdu Only [urdu_only_link]
+
+🌍 Arabic/English [arabic_english_link]
+
+🗣️ Arabic & Urdu [arabic_urdu_link]
+
+Progress (Day [N]/30):
+[MOON_PHASE] [PERCENTAGE]%
+
+📲 Tip: Listen while performing tasks - during breakfast, your morning routine, or leisure time. Make it a habit!
+
+✨ Remember: Consistency is key. Just 30 minutes today will strengthen your connection with the Quran.
+
+Keep us in your prayers, and may Allah bless us all.
+Ameen. 🤲
