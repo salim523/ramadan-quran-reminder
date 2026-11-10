@@ -1,0 +1,48 @@
+# Checks a pull request's title and commits against Conventional Commits.
+# Rules: ~/.agents/rules/commits.md. Other repos call it:
+#   jobs:
+#     conventional-commits:
+#       uses: salim523/agents/.github/workflows/conventional-commits.yml@main
+name: Conventional Commits
+on:
+  workflow_call:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+permissions:
+  contents: read
+  pull-requests: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check PR title and commits
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TITLE: ${{ github.event.pull_request.title }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          types='feat|fix|docs|chore|ci|build|refactor|test|perf|revert|style'
+          re="^($types)(\([a-z0-9._/-]+\))?!?: [^ ].*"
+          bad=0
+          if printf '%s' "$TITLE" | grep -Eq "$re"; then
+            echo "PR title ok: $TITLE"
+          else
+            echo "::error title=PR title::'$TITLE' isn't Conventional Commits. Use <type>(<scope>)!: <subject>, e.g. 'fix(ios): add purpose strings'. Types: ${types//|/, }"
+            bad=1
+          fi
+          # One line per commit: <parent count> <sha> <subject>. Merge commits (2+ parents) are exempt.
+          gh api --paginate "repos/$REPO/pulls/$PR/commits" \
+            -q '.[] | "\(.parents | length) \(.sha[0:7]) \(.commit.message | split("\n")[0])"' > commits.txt
+          while read -r parents sha subject; do
+            [ "$parents" -gt 1 ] && continue
+            case "$subject" in "Merge "*|"Revert \""*|"fixup! "*|"squash! "*|"amend! "*) continue ;; esac
+            if printf '%s' "$subject" | grep -Eq "$re"; then
+              echo "commit ok: $sha $subject"
+            else
+              echo "::error title=Commit $sha::'$subject' isn't Conventional Commits."
+              bad=1
+            fi
+          done < commits.txt
+          exit $bad
